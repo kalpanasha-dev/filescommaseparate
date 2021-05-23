@@ -1,0 +1,67 @@
+Option Explicit 
+Dim objExcel, objWorkbook, objWorksheet, row, col, msg, ThisTxt, ThisLen, ctrCells, objFSO Dim ipFN, OPFN, objTextFile, ipLen, opLen, WshShell 
+Const swDebug = false 
+If Wscript.Arguments.Count = 0 then  
+ wscript.echo "Please drag a file to the icon!" 
+ wscript.quit 
+end if 
+msg = "" 
+IpFN = trim(wscript.arguments(0)) ' Complete input file name Set objFSO = CreateObject("Scripting.FileSystemObject") 
+OPFN = IPFN & ".DivideBigCells.txt" 
+Set objTextFile = objFSO.CreateTextFile (OPFN, True) 
+' Start the application 
+Set objExcel = CreateObject("Excel.Application") 
+objExcel.Application.visible = false ' make Excel invisible Set objWorkbook = objExcel.Workbooks.Open(IPFN) 
+Set objWorksheet = objWorkbook.Worksheets(1) '<---- Hardcode the worksheet number 
+ctrCells = 0  
+Const Threshhold = 1000 
+For Row = 1 to objWorksheet.UsedRange.Rows.Count 
+ For col = 1 to 9  
+ ctrCells = ctrCells + 1 
+ ThisTxt = (objWorksheet.Cells(row,col).Value) 
+ ThisLen = len(ThisTxt) 
+ If ThisLen > Threshhold then 
+ DivideCell 
+end if  
+ next 
+next 
+'msg = msg & "I checked " & ctrCells & " cells." & vbcrlf 
+'MsgBox(Msg) 
+objExcel.Application.quit ' Close the spreadsheet  
+Set objWorksheet = nothing 
+Set objWorkbook = nothing
+Set objExcel = nothing 
+objTextFile.close 
+' Open Notepad, and write the new stuff  
+Set WshShell = WScript.CreateObject("WScript.Shell") 
+WshShell.Run ("%windir%\notepad" & " " & OPFN) 
+Wscript.quit 
+'*------------* 
+Sub DivideCell  
+'*------------* 
+Dim opLine, i, j, strThisLine, opPartNo 
+opLine = "Row=" & row & "; col=" & col & "; length=" & ThisLen  
+objTextFile.writeline(OpLine) 
+objTextFile.writeline("Part 1 " & "------------------------------") 
+opLine = "" : ipLen = 0 : OpLen = 0 : opPartNo = 1 
+For i = 1 to len(Thistxt) 
+ ipLen = ipLen + 1 
+ If mid(ThisTxt,i,1) = vbLF then 
+ ipLen = ipLen - 1 
+ If swDebug then  
+ opLine = "Line len=" & ipLen & "; line=" & " " & opline 
+ end if  
+ objTextFile.writeline(OpLine) : OpLine = "" 
+opLen = opLen + ipLen 
+If opLen > 1000 then  
+ objTextFile.writeline 
+ opLen = 0 
+ opPartNo = opPartNo + 1 
+ objTextFile.writeline("Part " & opPartNo & " ------------------------------") end if 
+ipLen = 0  
+ else 
+ opLine = opLine & mid(Thistxt,i,1) 
+ end if 
+Next  
+opLine = "------------------------------------------------------------------------------"  objTextFile.writeline(OpLine) 
+End Sub
