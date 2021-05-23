@@ -1,0 +1,144 @@
+' Populate a Spreadsheet 
+' This will demonstrate how to populate a spreadsheet, and to color cells/rows/columns 
+' Color enums 
+Const Aqua = 42 
+Const Black = 1 
+Const Blue = 5 ' Identical to 32 
+Const BlueGray = 47 
+Const BrightGreen = 4 
+Const Brown = 53 
+Const Cream = 19 
+Const DarkBlue = 11 ' Identical to 25 
+Const DarkGreen = 51 
+Const DarkPurple = 21 
+Const DarkRed = 9 ' Identical to 30 
+Const DarkTeal = 49 
+Const DarkYellow = 12 
+Const Gold = 44 
+Const Gray25 = 15 
+Const Gray40 = 48 
+Const Gray50 = 16 
+Const Gray80 = 56 
+Const Green = 10 
+Const Indigo = 55 
+Const Lavender = 39 
+Const LightBlue = 41 
+Const LightGreen = 35 
+Const LightLavender = 24 
+Const LightOrange = 45 
+Const LightTurquoise = 20 ' Identical to 34 
+Const LightYellow = 36 
+Const Lime = 43 
+Const NavyBlue = 23 
+Const OliveGreen = 52 
+Const Orange = 46 
+Const PaleBlue = 37 
+Const Pink = 7 ' Identical to 26 
+Const Plum = 18 ' Identical to 54 
+Const PowderBlue = 17 
+Const Red = 3 
+Const Rose = 38 
+Const Salmon = 22 
+Const SeaGreen = 50 
+Const SkyBlue = 33 
+Const TanColor = 40 
+Const Teal = 14 ' Identical to 31 
+Const Turquoise = 8 ' Identical to 28 
+Const Violet = 13 ' Identical to 29 
+Const White = 2
+Const Yellow = 6 ' Identical to 27 
+Const NUMROWS = 29 
+Const NUMCOLS = 13 
+Set objExcel = CreateObject("Excel.Application") ' Bind to the Excel object objExcel.Visible = True 
+objExcel.Workbooks.Add ' Create a new workbook. Sheet = 1 ' Select the first sheet Set objSheet = objExcel.ActiveWorkbook.Worksheets(Sheet) ' Bind to worksheet. objSheet.Name = "VBS_Excel_Example" ' Name the worksheet 
+strExcelPath = "U:\data\VBScript\Vbs_Excel_Example.xls" ' Set the save location Randomize 
+'-------------* 
+'Populate the worksheet with data 
+'-------------* 
+'Add some titles to row 1 
+objSheet.Cells(1, 1).Value = "ColA Hdr" ' Row 1 Column 1 (A) objSheet.Cells(1, 2).Value = "ColB Hdr" ' Row 1 Column 2 (B) objSheet.Cells(1, 3).Value = "ColC Hdr" ' Row 1 Column 3 (C) objSheet.Cells(1, 4).Value = "ColD Hdr" ' Row 1 Column 4 (D) objSheet.Cells(1, 5).Value = "ColE Hdr" ' Row 1 Column 5 (E) objSheet.Cells(1, 6).Value = "ColF Hdr" ' Row 1 Column 6 (F) objSheet.Cells(1, 7).Value = "ColG Hdr" ' Row 1 Column 7 (G) objSheet.Cells(1, 8).Value = "ColH Hdr" ' Row 1 Column 8 (H) objSheet.Cells(1, 9).Value = "ColI Hdr" ' Row 1 Column 9 (I) objSheet.Cells(1, 10).Value = "ColJ Hdr" ' Row 1 Column 10 (J) 
+objSheet.Cells(1, 11).Value = "ColK Hdr" ' Row 1 Column 11 (K) objSheet.Cells(1, 12).Value = "ColL Hdr" ' Row 1 Column 12 (L) objSheet.Cells(1, 13).Value = "ColM Hdr" ' Row 1 Column 13 (M) 
+'Add some data using a loop 
+For row = 2 to NUMROWS 
+ objSheet.Cells(row, 1).Value = "Row " & row & " Col A" 
+ objSheet.Cells(row, 2).Value = "Row " & row & " Col B" 
+ objSheet.Cells(row, 3).Value = "Row " & row & " Col C" 
+ objSheet.Cells(row, 4).Value = "Row " & row & " Col D" 
+ objSheet.Cells(row, 5).Value = "Row " & row & " Col E" 
+ objSheet.Cells(row, 6).Value = "Row " & row & " Col F" 
+ objSheet.Cells(row, 7).Value = "Row " & row & " Col G" 
+ objSheet.Cells(row, 8).Value = "Row " & row & " Col H" 
+ objSheet.Cells(row, 9).Value = "Row " & row & " Col I" 
+ objSheet.Cells(row, 10).Value = "Row " & row & " Col J" 
+ objSheet.Cells(row, 11).Value = "Row " & row & " Col K" 
+ objSheet.Cells(row, 12).Value = "Row " & row & " Col L" 
+ objSheet.Cells(row, 13).Value = "Row " & row & " Col M" 
+Next 
+'-------------* 
+' Format the spreadsheet 
+'-------------* 
+'Put the first row in bold, font size 14 
+objSheet.Range("A1:M1").Font.Bold = True 
+objSheet.Range("A1:M1").Font.Size = 14 
+'Freeze the panes 
+objSheet.Range("A2").Select 
+objExcel.ActiveWindow.FreezePanes = True 
+'Change column A and B to use a fixed width 
+objExcel.Columns(1).ColumnWidth = 10
+objExcel.Columns(2).ColumnWidth = 10 
+objExcel.Columns(3).ColumnWidth = 10 
+objExcel.Columns(4).ColumnWidth = 10 
+objExcel.Columns(5).ColumnWidth = 10 
+objExcel.Columns(6).ColumnWidth = 10 
+objExcel.Columns(7).ColumnWidth = 10 
+objExcel.Columns(8).ColumnWidth = 10 
+objExcel.Columns(9).ColumnWidth = 10 
+objExcel.Columns(10).ColumnWidth = 10 
+objExcel.Columns(11).ColumnWidth = 10 
+objExcel.Columns(12).ColumnWidth = 10 
+objExcel.Columns(13).ColumnWidth = 10 
+'Change columns to autofit 
+objExcel.Columns(3).AutoFit() 
+objExcel.Columns(6).AutoFit() 
+'Change the background color of columns 
+intNext = RN 
+For i = 1 to NUMCOLS 
+ intNext = RN 
+ objExcel.Columns(i).Interior.ColorIndex = intNext  wscript.sleep(400) 
+Next  
+'Change the background color of rows 
+For i = 1 to NUMROWS  
+ intNext = RN 
+ objExcel.Rows(i).Interior.ColorIndex = intNext  wscript.sleep(300) 
+Next  
+'Change the font color of column C  
+objExcel.Columns(3).Font.ColorIndex = BLUE 
+' Now do some specific colorization 
+objSheet.Cells(1,1).Interior.ColorIndex = LightYellow wscript.sleep(300) 
+objSheet.Cells(2,2).Interior.ColorIndex = LightYellow wscript.sleep(300) 
+objSheet.Cells(3,3).Interior.ColorIndex = LightYellow wscript.sleep(300) 
+objSheet.Cells(4,4).Interior.ColorIndex = LightYellow wscript.sleep(300) 
+objSheet.Cells(5,5).Interior.ColorIndex = LightYellow wscript.sleep(300) 
+objSheet.Cells(6,6).Interior.ColorIndex = LightYellow wscript.sleep(300) 
+objSheet.Cells(7,7).Interior.ColorIndex = LightYellow wscript.sleep(300) 
+objSheet.Cells(8,8).Interior.ColorIndex = LightYellow wscript.sleep(300) 
+objSheet.Cells(9,9).Interior.ColorIndex = LightYellow wscript.sleep(300) 
+objSheet.Cells(10,10).Interior.ColorIndex = LightYellow wscript.sleep(300) 
+MsgBox "All done!" 
+'-------------* 
+' Save the spreadsheet and close the workbook '-------------* 
+'objExcel.ActiveWorkbook.SaveAs strExcelPath
+'objExcel.ActiveWorkbook.Close 
+'objExcel.Application.Quit 'Quit Excel 
+'Clean Up 
+'Set objSheet = Nothing 
+'Set objExcel = Nothing 
+Function RN() 
+Dim TempRN 
+TempRN = Int((40) * Rnd + 1) 
+ ' Get rid of colors that we do not want 
+ do while (TempRN = BLACK) or (TempRN = DarkBlue) or (TempRN = DarkPurple) or _  (TempRN = 25)  
+ TempRN = Int((40) * Rnd + 1) 
+ Loop 
+ RN = TempRN 
+end Function
