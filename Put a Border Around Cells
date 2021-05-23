@@ -1,0 +1,9 @@
+Const xlPasteValues = -4163 '(&HFFFFEFBD) 
+Const xlPasteFormats = -4122  
+Const xlPasteSpecialOperationNone = -4142 '(&HFFFFEFD2) 
+With objExcel 
+ .Range("B2").Select 
+ .Selection.Copy 
+ .Range("C2:BB200").Select 
+ .Selection.PasteSpecial xlPasteFormats, xlPasteSpecialOperationNone, False, False   .Application.CutCopyMode = False  
+end with
