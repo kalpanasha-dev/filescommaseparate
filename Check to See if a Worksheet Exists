@@ -1,0 +1,12 @@
+Set objWorkbook = objExcel.Workbooks.Open(ssVF)  
+'* Check to see if the worksheet name you supplied is valid. 
+WSExists = 0 
+For Each objWorksheet in objWorkbook.Worksheets 
+ If objWorksheet.Name = wkshname Then 
+ WSExists = 1 
+ Exit For 
+ End If 
+Next 
+If wSExists = 0 Then 'Doesn't exist 
+ MsgBox wkshName & ": Worksheet does not exist in the spreadsheet", vbCritical, WScript.Scriptname wscript.quit 
+End If
