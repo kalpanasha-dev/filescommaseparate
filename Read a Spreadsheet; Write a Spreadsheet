@@ -1,0 +1,103 @@
+Option Explicit 
+Dim objExcel, objFSO, objFileCopy, objWorkBookI, objWorksheetI, objWorkBookO, objWorkSheetO Dim IRow, ORow, Comments, Initials, objRange 
+Dim Msg, strUAMsg, ctrFnd, IPFN, OPFN, ActItem, strReqNo, ctrIP, ctrFailed 
+'*------------* 
+'* Open the input Excel document, and the output Excel document 
+'*------------* 
+If Wscript.Arguments.Count = 0 then  
+ wscript.echo "Please drag a file to the icon!" 
+ wscript.quit 
+end if 
+Set objFSO = CreateObject("Scripting.FileSystemObject") 
+IpFN = trim(wscript.arguments(0)) ' Complete input file name OpFN = IPFN & "New.xls" ' Complete output file name Set objExcel = CreateObject("Excel.Application") ' Start the application Set objWorkBookI = objExcel.Workbooks.Open(IPFN) 
+Set objWorksheetI = objWorkBookI.Worksheets(1)  
+Set objWorkBookO = objExcel.Workbooks.Add 
+Set objWorksheetO = objWorkBookO.Worksheets(1)  
+'*------------* 
+'* Read the spreadsheet 
+'*------------* 
+ctrIP = 0 : ctrFnd = 0 : ctrFailed = 0 : strUAMsg = "" : oRow = 0 
+' The columms in the spreadsheet: 
+' A - Item Number 
+' B - Review Technique 
+' C - Finding 
+' D - Requirement Number 
+' G - Testability- PASS or FAIL 
+' H - Reviewer's Comments 
+' I - Reviewer's initials 
+For IRow = 9 to objWorksheetI.UsedRange.Rows.Count 
+ ' Assign field names to some cells 
+ strReqNo = objWorksheetI.Cells(IRow,4).Value  
+ ActItem = objWorksheetI.Cells(IRow,5).Value 
+ Comments = objWorksheetI.Cells(IRow,8).Value 
+ Initials = objWorksheetI.Cells(IRow,9).Value 
+  
+ If (trim(objWorksheetI.Cells(IRow,1).Value) = "") then ' Item number is empty  exit for 
+ end if 
+ If (trim(objWorksheetI.Cells(IRow,1).Value) = "TOTAL:") then ' Item number   exit for
+ end if 
+ ctrIP = ctrIP + 1 ' Count IRows processed 
+  
+ ' Display where testability is empty 
+ If (trim(objWorksheetI.Cells(IRow,7).Value) = "") then  
+ strUAMsg = strUAMsg & "Req= " & strReqNo & " (Row=" & IRow & ")" & _ 
+ "; Testability was not completed." & vbcrlf 
+ ctrFnd = ctrFnd + 1 
+ end if 
+  
+ ' Display where Reviewer's Initials cell is is empty 
+ If (trim(objWorksheetI.Cells(IRow,9).Value) = "") then  
+ strUAMsg = strUAMsg & "Req= " & strReqNo & " (Row=" & IRow & ")" & _ 
+ "; Reviewer's initials were not supplied." & vbcrlf 
+ ctrFnd = ctrFnd + 1 
+ end if 
+  
+ ' If Failed, make sure there is something in cols C, H, and I 
+ If (trim(objWorksheetI.Cells(IRow,7).Value) = "FAIL") then  
+ If (trim(objWorksheetI.Cells(IRow,3).Value) = "") then 
+ strUAMsg = strUAMsg & "Req= " & strReqNo & " (Row=" & IRow & ")" & _ 
+ "; Finding is missing." & vbcrlf 
+ ctrFnd = ctrFnd + 1 
+end if  
+ If (trim(objWorksheetI.Cells(IRow,8).Value) = "") then 
+ strUAMsg = strUAMsg & "Req= " & strReqNo & " (Row=" & IRow & ")" & _ 
+ "; Reviewer's Comments missing." & vbcrlf 
+ ctrFnd = ctrFnd + 1 
+end if  
+ If (trim(objWorksheetI.Cells(IRow,9).Value) = "") then 
+ strUAMsg = strUAMsg & "Req= " & strReqNo & " (Row=" & IRow & ")" & _ 
+ "; Reviewer's Initials are missing." & vbcrlf 
+ ctrFnd = ctrFnd + 1 
+end if  
+ end if 
+  
+ ' If Passed, make sure there is NOTHING in col C 
+ If (trim(objWorksheetI.Cells(IRow,7).Value) = "PASS") then  
+ If (trim(objWorksheetI.Cells(IRow,3).Value) <> "") then 
+ strUAMsg = strUAMsg & "Req= " & strReqNo & "; Finding supplied for passed requirement." &  vbcrlf 
+ ctrFnd = ctrFnd + 1 
+end if  
+ end if 
+  
+ ' Now list the failed items to the output spreadsheet 
+ If (objWorksheetI.Cells(IRow,7).Value) = "FAIL" then 
+ ctrFailed = ctrFailed + 1 : oRow = oRow + 1 
+ objWorksheetO.Cells(oRow,1).Value = strReqNo 
+ objExcel.Columns(2).ColumnWidth = 60  
+objWorksheetO.Cells(oRow,2).Value = Comments 
+set objRange = objExcel.Range("B1").EntireColumn 
+objRange.Wraptext = true 
+ objWorksheetO.Cells(oRow,3).Value = Initials 
+ end if  
+Next 
+objWorkBookI.close 
+objFSO.deleteFile(OPFN) 
+objWorkbookO.SaveAs(OPFN)  
+objExcel.visible = true 
+Msg = "I processed " & ctrIP & " input rows." & vbcrlf
+Msg = Msg & "I found " & ctrFnd & " problems." & vbcrlf 
+If ctrFnd > 0 then  
+ Msg = Msg & "They are: " & vbcrlf & strUAMsg 
+end if 
+Msg = Msg & ctrFailed & " requirements were failed, and written to the output spreadsheet." &  vbcrlf 
+MsgBox Msg,,wscript.scriptname
