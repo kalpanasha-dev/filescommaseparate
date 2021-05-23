@@ -1,0 +1,5 @@
+Align Cells at the Top 
+Const xlTop = -4160  
+objSheet.Range("A1:B999").VerticalAlignment = xlTop 
+Highlight a Cell 
+' 1=black 2=nothing 3=red 4=green 5=blue 6=yellow objWorkSheetB.Cells(RowB,10).Interior.ColorIndex = 6 
