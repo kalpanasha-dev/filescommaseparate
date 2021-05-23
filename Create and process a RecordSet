@@ -1,0 +1,26 @@
+' First, add an array to a recordset 
+Const adVarChar = 200 'the SQL datatype is varchar  Const adOpenStatic = 3 
+Const adUseClient = 3 
+const adChar = 129 
+Dim rs : Set rs = CreateObject("ADODB.RECORDSET")  
+rs.CursorType = adOpenStatic  
+rs.Cursorlocation = adUseClient  
+rs.Fields.Append "ArEntry", adChar, 16 'String with 16 characters rs.open 
+For I = 1 to ubound(strArray) 
+rs.AddNew 
+rs("ArEntry") = strArray(i) 
+rs.Update 
+next  
+' Now we sort it 
+rs.sort = "ArEntry" 
+'* Delete duplicate entries from the array 
+Dim strLastEntry, strThisEntry 
+strLastEntry = "" 
+Do Until rs.EOF 
+strThisEntry = rs.Fields.Item("ArEntry")  
+If strComp(strLastEntry,strThisEntry,vbTextCompare) = 0 then  rs.delete 
+else  
+strLastEntry = strThisEntry 
+end if 
+rs.MoveNext 
+Loop
