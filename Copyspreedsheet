@@ -1,0 +1,43 @@
+Option Explicit 
+Const OPFN = "U:\Assignments\_Open\A002\Template2.xls" 
+Dim objExcel, objFSO, objFileCopy, objWorkBookI, objWorkBookO, objWorksheetI, objWorksheetO 
+Proc01 ' Initialization 
+Proc02 ' Copy the output spreadsheet to a new one 
+Proc03 ' Populate the output spreadsheet 
+Proc04 ' Finalization 
+WScript.quit 
+'*------------* 
+'* Proc01 - Initialization 
+'*------------* 
+Sub Proc01 
+End sub 
+'*------------* 
+'* Proc02 - Copy the output spreadsheet to a new one  
+'*------------* 
+Sub Proc02 
+ Const IPFN = "U:\Assignments\_Open\A002\Template.xls" 
+ Set objFSO = CreateObject("Scripting.FileSystemObject") 
+ Set objFileCopy = objFSO.GetFile(IPFN) 
+ if objFSO.FileExists(OPFN) then 
+ objFSO.DeleteFile(OPFN) 
+ end if 
+ objFileCopy.Copy (OPFN) 
+End sub 
+'*------------* 
+'* Proc03 - Populate the output spreadsheet 
+'*------------* 
+Sub Proc03 
+ Const filename = "U:\Assignments\_Open\A002\FR's from Copy of Requirements from DR1412 20100708 v  1 1.xls" 
+ Dim Seq, FrNo, Paragraph, Title, Description, CQI, strModule, Status, row 
+ Set objExcel = CreateObject("Excel.Application") ' Start the application  Set objWorkBookI = objExcel.Workbooks.Open(filename) 
+ Set objWorksheetI = objWorkBookI.Worksheets(1)  
+ Set objWorkBookO = objExcel.Workbooks.Open(OPFN) 
+ Set objWorksheetO = objWorkBookO.Worksheets(1)  
+ For row = 2 to objWorksheetI.UsedRange.Rows.Count 
+ Seq = (objWorksheetI.Cells(row,1).Value) 
+ FrNo = (objWorksheetI.Cells(row,2).Value) 
+ Paragraph = (objWorksheetI.Cells(row,3).Value) 
+ Title = (objWorksheetI.Cells(row,4).Value) 
+ Description = (objWorksheetI.Cells(row,5).Value) 
+ CQI = (objWorksheetI.Cells(row,6).Value) 
+ strModule = (objWorksheetI.Cells(row,7).Value)
