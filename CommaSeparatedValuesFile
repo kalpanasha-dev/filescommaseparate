@@ -1,0 +1,60 @@
+Option Explicit 
+Dim objFSO, InitFSO, objFSO2 
+Dim objExcel, objWorkbook, objWorksheet, row, col, msg, ThisTxt, ThisLen, i, j Dim wksheetno, wkbkname, intLimit, ColIDs, IDIdx, strExtra 
+Dim objTextFile, OpLine 
+Const ForReading = 1 
+Const ForWriting = 2 
+Const ForAppending = 8 
+Set ObjFSO = CreateObject("UserAccounts.CommonDialog") 
+ObjFSO.Filter = "Excel files|*.xls"  
+InitFSO = ObjFSO.ShowOpen 
+If InitFSO = False Then 
+ Wscript.Echo "You did not select a file!" 
+ Wscript.Quit 
+Else 
+ wkbkname = ObjFSO.Filename 
+End If 
+' Open the CSV file 
+Set ObjFSO2 = CreateObject("Scripting.FileSystemObject") 
+Set objTextFile = objFSO2.OpenTextFile _ 
+ ("MyCSVFile.txt", ForWriting, True) 
+' Start the application 
+Set objExcel = CreateObject("Excel.Application") 
+'objExcel.Application.visible = true ' make Excel visible 
+Set objWorkbook = objExcel.Workbooks.Open(wkbkname)  
+If objWorkbook.sheets.count > 1 then 
+ wkSheetno = cInt(inputbox("Enter the worksheet number you wish to work with",WScript.scriptname &  " needs some input from you!","1")) 
+else  
+ wkSheetNo = 1 
+end if  
+intLimit = objWorkbook.sheets.count 
+strExtra = "" 
+If intLimit > 10 then  
+ intLimit = 10 
+ strExtra = "first ten" 
+end if  
+Msg = "Workbook Name: " & objWorkbook.Name & vbcrlf 
+  
+If wksheetno > objWorkbook.sheets.count then
+ msgbox "You selected worksheet number " & wksheetno & ", and there are only" &  objWorkbook.sheets.count ,,"Input Error" 
+ wscript.quit 
+end if  
+Set objWorksheet = objWorkbook.Worksheets(wksheetno)  
+' We already know which rows and columns are DEFINED. Now see which cell is the last to actually ' contain a value. 
+For i = 1 to objWorksheet.UsedRange.Rows.Count  
+ OpLine = "" 
+ For j = 1 to objWorksheet.UsedRange.Columns.Count  
+ OpLine = OpLine & objWorksheet.Cells(i,j).Value  
+If j mod 2 = 0 then OpLine = OpLine & "," 
+ next 
+ OpLine = left(OpLine,len(OpLine) -1) ' Drop off the last comma 
+ objTextFile.writeline(OpLine) 
+next  
+Msg = "Complete!" 
+MsgBox Msg,,WScript.Scriptname 
+objExcel.Application.quit ' Do not Leave the spreadsheet open 
+objTextFile.Close 
+Set objWorksheet = nothing 
+Set objWorkbook = nothing 
+Set objExcel = nothing 
+Wscript.quit
