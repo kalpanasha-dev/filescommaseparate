@@ -1,0 +1,43 @@
+Const EXPLODEDPIECHART = 70 
+Const EXPLODEDDONUT = 80 
+Const BARCHART = -4100 
+Const PIECHART = -4102 
+Const xlDataLabelsShowPercent = 3 
+Set objExcel = CreateObject("Excel.Application") 
+objExcel.Visible = True 
+Set objWorkbook = objExcel.Workbooks.Add() 
+Set objWorksheet = objWorkbook.Worksheets(1) 
+objWorksheet.Cells(1,1) = "Operating System" 
+objWorksheet.Cells(2,1) = "Windows Server 2003" 
+objWorksheet.Cells(3,1) = "Windows XP" 
+objWorksheet.Cells(4,1) = "Windows 2000" 
+objWorksheet.Cells(5,1) = "Windows NT 4.0" 
+objWorksheet.Cells(6,1) = "Other" 
+objWorksheet.Cells(1,2) = "Number of Computers" 
+objWorksheet.Cells(2,2) = 145 
+objWorksheet.Cells(3,2) = 487 
+objWorksheet.Cells(4,2) = 211 
+objWorksheet.Cells(5,2) = 41 
+objWorksheet.Cells(6,2) = 56 
+Set objRange = objWorksheet.UsedRange 
+objRange.Select 
+Set colCharts = objExcel.Charts 
+colCharts.Add() 
+objWorkBook.sheets(4).Delete ' Sheet3 
+objWorkBook.sheets(3).Delete ' Sheet2 
+objWorkBook.sheets(2).Visible = false ' Sheet 1 has the data that is charted objWorkBook.sheets(1).Name = "Exploded Pie Chart" 
+Set objChart = colCharts(1) 
+objChart.Activate 
+objChart.ChartType = EXPLODEDPIECHART 
+objChart.Elevation = 30 
+objChart.Rotation = 80 
+objChart.ApplyDataLabels xlDataLabelsShowPercent 
+objChart.PlotArea.Fill.Visible = False 
+objChart.PlotArea.Border.LineStyle = -4142 
+objChart.SeriesCollection(1).DataLabels.Font.Size = 14 
+objChart.SeriesCollection(1).DataLabels.Font.ColorIndex = 2 
+objChart.ChartArea.Fill.ForeColor.SchemeColor = 49 
+objChart.ChartArea.Fill.BackColor.SchemeColor = 23
+objChart.ChartArea.Fill.TwoColorGradient 1,1 
+objChart.ChartTitle.Font.Size = 24 objChart.ChartTitle.Font.ColorIndex = 2 
+objChart.Legend.Shadow = True
